@@ -9,7 +9,9 @@ export const WALLET_FILE = JSON.parse(
     readFileSync(path.join(__dirname, '../../wallet.json')).toString(),
 );
 export const PORT = process.env.PORT;
-
+export const GET = "GET";
+export const POST = "POST";
+export const CRON_INTERVAL_MS = Number(process.env.CRON_INTERVAL_MS) || 1000
 
 
 export const validateEnvironmentVariables = (): void | true => {

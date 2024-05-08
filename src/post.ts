@@ -1,15 +1,16 @@
+
 import { PORT, validateEnvironmentVariables, WALLET_FILE } from './constants/vars';
-// import cron from 'node-cron';
+import cron from 'node-cron';
 
-
+// ts - node - dev src / index.ts
 import express, { Request, Response } from 'express';
-import { readGetRequests, readPostRequests } from './service/ao.service';
+import { readPostRequests } from './service/ao.service';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { createDataItemSigner, message } from '@permaweb/aoconnect';
 
 // Create an Express application
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // Define a route handler for the root path
 app.get('/', (req: Request, res: Response) => {
@@ -29,32 +30,20 @@ if (validateEnvironmentVariables()) {
     //         console.error('An error occurred in the cron job:', error)
     //     }
     // })
-    async function getCron() {
+    async function cron() {
         while (true) {
-            console.info("Cron job triggered GET");
+            console.info("Cron job triggered");
             try {
                 await processRequests();
             } catch (error) {
                 console.error("Error occurred in the cron loop:", error);
             }
             await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before the next iteration
-            console.info("Cron job completed GET");
-        }
-    }
-    async function postCron() {
-        while (true) {
-            console.info("Cron job triggered POST");
-            try {
-                await processRequestsPost();
-            } catch (error) {
-                console.error("Error occurred in the cron loop:", error);
-            }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before the next iteration
-            console.info("Cron job completed POST");
+            console.info("Cron job completed");
         }
     }
 
-    async function processRequestsPost() {
+    async function processRequests() {
         const messageData = await readPostRequests();
         const requests = JSON.parse(messageData);
         console.log(requests)
@@ -65,7 +54,7 @@ if (validateEnvironmentVariables()) {
 
         const commonTags = [
             { name: "Request-Type", value: "POST" },
-            { name: "Action", value: "Receive-Response" },
+            { name: "Action", value: "Recieve-Response" },
             { name: "Request-Msg-Id", value: reqKey },
             { name: "Fee", value: "500000000000" }
         ];
@@ -76,31 +65,6 @@ if (validateEnvironmentVariables()) {
             let res: AxiosResponse;
             if (body) res = await axios.post(req.Url, body);
             else res = await axios.post(req.Url);
-            await processResponse(req, res, commonTags);
-        } catch (error) {
-            await handleError(req, error, commonTags);
-        }
-    }
-
-    async function processRequests() {
-        const messageData = await readGetRequests();
-        const requests = JSON.parse(messageData);
-        console.log(requests)
-        if (Object.keys(requests).length === 0) throw "No more requests to process.";
-
-        const reqKey = Object.keys(requests)[0];
-        const req = requests[reqKey];
-
-        const commonTags = [
-            { name: "Request-Type", value: "GET" },
-            { name: "Action", value: "Receive-Response" },
-            { name: "Request-Msg-Id", value: reqKey },
-            { name: "Fee", value: "500000000000" }
-        ];
-
-        try {
-            console.log("URL:", req.Url)
-            const res = await axios.get(req.Url);
             await processResponse(req, res, commonTags);
         } catch (error) {
             await handleError(req, error, commonTags);
@@ -127,7 +91,7 @@ if (validateEnvironmentVariables()) {
     }
 
     async function handleError(req, error, commonTags) {
-        console.error("Error while processing request:", error);
+        // console.error("Error while processing request:", error);
         let errorMessage = error.message || "An unknown error occurred";
         let errorData = error.response ? JSON.stringify(error.response.data) : errorMessage;
 
@@ -151,8 +115,7 @@ if (validateEnvironmentVariables()) {
     }
 
 
-    getCron()
-    postCron()
+    cron()
 }
 
 // Handle uncaught exceptions
