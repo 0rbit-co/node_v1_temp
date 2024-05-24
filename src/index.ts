@@ -37,7 +37,7 @@ if (validateEnvironmentVariables()) {
             } catch (error) {
                 console.error("Error occurred in the cron loop:", error);
             }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before the next iteration
+            await new Promise(resolve => setTimeout(resolve, 500)); // Delay before the next iteration
             console.info("Cron job completed GET");
         }
     }
@@ -49,7 +49,7 @@ if (validateEnvironmentVariables()) {
             } catch (error) {
                 console.error("Error occurred in the cron loop:", error);
             }
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before the next iteration
+            await new Promise(resolve => setTimeout(resolve, 500)); // Delay before the next iteration
             console.info("Cron job completed POST");
         }
     }

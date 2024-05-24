@@ -5,7 +5,8 @@ export const readGetRequests = async () => {
     try {
         const { Error, Messages } = await dryrun({
             // process: "4_jJUtiNjq5Xrg8OMrEDo-_bud7p5vbSJh1e69VJ76U",
-            process: "WSXUI2JjYUldJ7CKq9wE1MGwXs-ldzlUlHOQszwQe0s",
+            // process: "WSXUI2JjYUldJ7CKq9wE1MGwXs-ldzlUlHOQszwQe0s",
+            process: "BaMK1dfayo75s3q1ow6AO64UDpD9SEFbeE8xYrY2fyQ",
             tags: [{ name: "Read", value: "GET_REQUESTS" }],
         })
         console.info("yooo", Messages)
@@ -21,7 +22,8 @@ export const readPostRequests = async () => {
     try {
         const { Error, Messages } = await dryrun({
             // process: "4_jJUtiNjq5Xrg8OMrEDo-_bud7p5vbSJh1e69VJ76U",
-            process: "WSXUI2JjYUldJ7CKq9wE1MGwXs-ldzlUlHOQszwQe0s",
+            // process: "WSXUI2JjYUldJ7CKq9wE1MGwXs-ldzlUlHOQszwQe0s",
+            process: "BaMK1dfayo75s3q1ow6AO64UDpD9SEFbeE8xYrY2fyQ",
             tags: [{ name: "Read", value: "POST_REQUESTS" }],
         })
         console.info("test", Messages)
