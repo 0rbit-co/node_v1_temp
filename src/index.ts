@@ -9,7 +9,7 @@ import { createDataItemSigner, message } from '@permaweb/aoconnect';
 
 // Create an Express application
 const app = express();
-const port = 3000;
+const port = PORT || 3000;
 
 // Define a route handler for the root path
 app.get('/', (req: Request, res: Response) => {
