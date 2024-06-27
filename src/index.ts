@@ -1,4 +1,4 @@
-import { PORT, validateEnvironmentVariables, WALLET_FILE } from './constants/vars';
+import { IMPORTANT_HEADERS, PORT, validateEnvironmentVariables, WALLET_FILE } from './constants/vars';
 // import cron from 'node-cron';
 
 
@@ -73,9 +73,9 @@ if (validateEnvironmentVariables()) {
         try {
             console.log("URL:", req.Url)
             const body = JSON.parse(req.Body)
-            let res: AxiosResponse;
-            if (body) res = await axios.post(req.Url, body);
-            else res = await axios.post(req.Url);
+            let res: AxiosResponse = await axios.post(req.Url, body, {
+                headers: req.Headers || {}
+            });
             await processResponse(req, res, commonTags);
         } catch (error) {
             await handleError(req, error, commonTags);
@@ -100,7 +100,9 @@ if (validateEnvironmentVariables()) {
 
         try {
             console.log("URL:", req.Url)
-            const res = await axios.get(req.Url);
+            const res = await axios.get(req.Url, {
+                headers: req.Headers || {}
+            });
             await processResponse(req, res, commonTags);
         } catch (error) {
             await handleError(req, error, commonTags);
@@ -108,14 +110,16 @@ if (validateEnvironmentVariables()) {
     }
 
     async function processResponse(req, res, commonTags) {
-        const headerTags = Object.entries(res.headers).map(([key, value]) => ({
-            name: key.toString(),
-            value: value.toString() // Ensure the value is a string, necessary .if the header values are not just strings
-        }));
-
+        const headerTags = Object.entries(res.headers)
+            .filter(([key]) => IMPORTANT_HEADERS.includes(key.toLowerCase()))
+            .map(([key, value]) => ({
+                name: key.toString(),
+                value: value.toString() // Ensure the value is a string, necessary if the header values are not just strings
+            }));
         const tags = [
             ...commonTags,
-            ...headerTags
+            ...headerTags,
+            { name: "Status", value: "SUCCESS" },
         ];
 
         console.log(await message({
@@ -129,7 +133,7 @@ if (validateEnvironmentVariables()) {
     async function handleError(req, error, commonTags) {
         console.error("Error while processing request:", error);
         let errorMessage = error.message || "An unknown error occurred";
-        let errorData = error.response ? JSON.stringify(error.response.data) : errorMessage;
+        let errorData = error.response ? JSON.stringify({ error: error.response.data }) : JSON.stringify({ error: errorMessage });
 
         const tags = [
             ...commonTags,

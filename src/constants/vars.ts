@@ -13,6 +13,28 @@ export const GET = "GET";
 export const POST = "POST";
 export const CRON_INTERVAL_MS = Number(process.env.CRON_INTERVAL_MS) || 1000
 
+export const IMPORTANT_HEADERS = [
+    'content-type',
+    'content-length',
+    'date',
+    'server',
+    'cache-control',
+    'etag',
+    'last-modified',
+    'connection',
+    'content-encoding',
+    'transfer-encoding',
+    'access-control-allow-origin',
+    'vary',
+    'content-security-policy',
+    'x-frame-options',
+    'strict-transport-security',
+    'x-content-type-options',
+    'x-xss-protection',
+    'referrer-policy',
+    'feature-policy'
+];
+
 
 export const validateEnvironmentVariables = (): void | true => {
     const missingVariables = [];
