@@ -72,9 +72,10 @@ if (validateEnvironmentVariables()) {
 
         try {
             console.log("URL:", req.Url)
-            const body = JSON.parse(req.Body)
-            let res: AxiosResponse = await axios.post(req.Url, body, {
-                headers: req.Headers || {}
+            const body = req.Body ? JSON.parse(req.Body) : {}
+            const headers = req.Headers ? JSON.parse(req.Headers) : {};
+            const res: AxiosResponse = await axios.post(req.Url, body, {
+                headers
             });
             await processResponse(req, res, commonTags);
         } catch (error) {
@@ -100,8 +101,9 @@ if (validateEnvironmentVariables()) {
 
         try {
             console.log("URL:", req.Url)
-            const res = await axios.get(req.Url, {
-                headers: req.Headers || {}
+            const headers = req.Headers ? JSON.parse(req.Headers) : {};
+            const res: AxiosResponse = await axios.get(req.Url, {
+                headers
             });
             await processResponse(req, res, commonTags);
         } catch (error) {
