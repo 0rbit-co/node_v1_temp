@@ -8,7 +8,7 @@
         "build": "rimraf ./dist && tsc",
         "dev:watch": "tsc -w",
         "start": "yarn run build && node dist/index.js",
-        "generate": "ts-node ./scripts/generateWallet.ts"
+        "generate": "ts-node-dev ./scripts/generateWallet.ts"
     },
     "keywords": [],
     "author": "",
